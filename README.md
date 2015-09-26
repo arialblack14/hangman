@@ -1,2 +1,2 @@
 <p>A simple command line Hangman game where one player plays against the computer, but a bit more advanced.</p>
-<p>If you're unfamiliar with how Hangman works, see [Wikipedia](http://www.wikipedia.org/).</p>
+<p>If you're unfamiliar with how Hangman works, see [Wikipedia](http://www.wikipedia.org).</p>
