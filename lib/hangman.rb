@@ -1,9 +1,15 @@
-filename = File.open("5desk.txt", "r")
+file = File.open("5desk.txt", "r")
+temp = file.to_a.sample
 
-def secret_code filename
-	if filename.to_a.sample.length.between? 5, 12
-		secret = secret_code filename
+def random_word temp
+	while !right_length temp
+		temp = File.open("5desk.txt", "r").to_a.sample
 	end
+	temp
 end
 
-puts secret_code filename
+def right_length temp
+	temp.length.between? 5, 12
+end
+
+puts random_word temp
