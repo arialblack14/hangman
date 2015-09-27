@@ -1,11 +1,9 @@
 class Game
-	attr_reader :game, :file, :word
+	attr_reader :ans, :game
 
 	def initialize
-		@game = game
-		@file = File.open("5desk.txt", "r")
-		@word = @file.to_a.sample.chomp
 		@ans = 0
+		@game = game
 	end
 
 	def start
@@ -22,7 +20,8 @@ class Game
 
 	def choice
 		if @ans == 1
-			random_word
+			hangman = Hangman.new
+			hangman.random_word
 		elsif @ans == 2
 			# some code to load game
 		elsif @ans == 3
@@ -32,18 +31,6 @@ class Game
 			puts "1, 2 or 3 please."
 			choice
 		end
-	end
-	
-	def random_word
-		while !right_length @word
-			temp = File.open("5desk.txt", "r").to_a.sample.chomp
-			@word = temp
-		end
-		@word
-	end
-
-	def right_length word
-		@word.length.between? 5, 12
 	end
 end
 
@@ -59,7 +46,78 @@ class Player
 	end
 end
 
+class Hangman
+	attr_reader :file, :word, :letter, :hidden, :turn, :not_found
+
+	def initialize
+		@file = File.open("5desk.txt", "r")
+		@word = @file.to_a.sample.chomp
+		@letter = letter
+		@hidden = []
+		@turn = 10
+		@not_found = []
+	end
+	
+	def random_word
+		while !right_length @word
+			temp = File.open("5desk.txt", "r").to_a.sample.chomp
+			@word = temp
+		end
+		@word
+		hidden_word
+		find_word
+	end
+
+	def right_length word
+		@word.length.between? 5, 12
+	end
+
+	def hidden_word
+		# Loop the length of the secret word times
+		@word.length.times do
+			@hidden << "_ "
+		end
+		p @hidden.join(" ")
+	end
+
+	def find_word
+		puts "Give me a letter: "
+		@letter = gets.chomp[0]
+		guess @letter
+	end
+
+	def guess letter
+		i = 0
+		if @word.include? @letter
+			puts "Found '#{@letter}'"
+			i = @word.index(@letter)
+			@hidden[i] = @letter
+		else 
+			puts "'#{@letter}'' not found."
+			@not_found << @letter
+		end
+		p @hidden.join(" ")
+		letters_not_found
+		@turn -= 1
+		puts "You have #{@turn} tries left."
+		find_word unless no_turns_left
+	end
+
+	def letters_not_found
+		puts "Letters not found: "+ @not_found.join(" ")
+	end
+
+	def no_turns_left
+		if @turn == 0
+			puts "You lose...Sorry"
+			puts "Secret word was '#{@word}'."
+			exit
+		end
+	end
+end
+
 game = Game.new
 player = Player.new
+
 player.hello
-p game.start
+game.start
