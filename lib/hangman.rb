@@ -1,60 +1,12 @@
-class Game
-	attr_reader :ans, :game
-
-	def initialize
-		@ans = 0
-		@game = game
-	end
-
-	def start
-		puts "***H A N G M A N***"
-		puts "Loading..."
-		sleep 1
-		puts "Please choose from 1 to 3."
-		puts "1 : New game"
-		puts "2 : Load saved game"
-		puts "3 : Quit"
-		@ans = gets.to_i
-		choice
-	end
-
-	def choice
-		if @ans == 1
-			hangman = Hangman.new
-			hangman.random_word
-		elsif @ans == 2
-			# some code to load game
-		elsif @ans == 3
-			puts "Sorry to see you go..."
-			exit
-		else
-			puts "1, 2 or 3 please."
-			choice
-		end
-	end
-end
-
-class Player
-	attr_reader :name
-
-	def initialize name = "Stranger"
-		@name = name
-	end
-
-	def hello
-		puts "Hello #{@name}."
-	end
-end
-
 class Hangman
 	attr_reader :file, :word, :letter, :hidden, :turn, :not_found
 
 	def initialize
 		@file = File.open("5desk.txt", "r")
-		@word = @file.to_a.sample.chomp
+		@word = @file.to_a.sample.downcase.chomp
 		@letter = letter
 		@hidden = []
-		@turn = 14
+		@turn = 10
 		@not_found = []
 	end
 	
@@ -72,6 +24,7 @@ class Hangman
 		@word.length.between? 5, 12
 	end
 
+	# Make an array of _ _ _ for the hidden word
 	def hidden_word
 		# Loop the length of the secret word times
 		@word.length.times do
@@ -87,22 +40,27 @@ class Hangman
 	end
 
 	def guess letter
+		# Checks if letter given is valid
 		if !('a'..'z').to_a.include? @letter
 			puts "A valid letter please."
 			find_word
 		end
-		i = 0
+
 		if @word.include? @letter
 			puts "Found '#{@letter}'"
-			i = @word.index(@letter)
-			# Player can not give same letter twice
-			unless @hidden.include? @letter
+			# Substitute all occurences of given letter in @hidden array
+			word_arr = @word.split("").each_index.select { |w| @word[w] == @letter }
+			word_arr.each do |i|
 				@hidden[i] = @letter
-			else
-				find_word
+			end
+			if @word == @hidden
+				puts "You win!!"
+				puts "Secret word was #{@word}."
+				puts "Bye..."
+				exit
 			end
 		else 
-			puts "'#{@letter}'' not found."
+			puts "'#{@letter}' not found."
 			@not_found << @letter
 			@turn -= 1
 		end
@@ -112,6 +70,7 @@ class Hangman
 		find_word unless no_turns_left
 	end
 
+	# Makes the array of not found letters
 	def letters_not_found
 		puts "Letters not found: "+ @not_found.join(" ")
 	end
@@ -124,9 +83,3 @@ class Hangman
 		end
 	end
 end
-
-game = Game.new
-player = Player.new
-
-player.hello
-game.start
