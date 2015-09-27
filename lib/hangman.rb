@@ -54,7 +54,7 @@ class Hangman
 		@word = @file.to_a.sample.chomp
 		@letter = letter
 		@hidden = []
-		@turn = 10
+		@turn = 14
 		@not_found = []
 	end
 	
@@ -82,23 +82,32 @@ class Hangman
 
 	def find_word
 		puts "Give me a letter: "
-		@letter = gets.chomp[0]
+		@letter = gets.downcase.chomp[0]
 		guess @letter
 	end
 
 	def guess letter
+		if !('a'..'z').to_a.include? @letter
+			puts "A valid letter please."
+			find_word
+		end
 		i = 0
 		if @word.include? @letter
 			puts "Found '#{@letter}'"
 			i = @word.index(@letter)
-			@hidden[i] = @letter
+			# Player can not give same letter twice
+			unless @hidden.include? @letter
+				@hidden[i] = @letter
+			else
+				find_word
+			end
 		else 
 			puts "'#{@letter}'' not found."
 			@not_found << @letter
+			@turn -= 1
 		end
 		p @hidden.join(" ")
-		letters_not_found
-		@turn -= 1
+		letters_not_found		
 		puts "You have #{@turn} tries left."
 		find_word unless no_turns_left
 	end
