@@ -1,3 +1,4 @@
+require 'yaml'
 require_relative 'hangman'
 require_relative 'player'
 
@@ -38,7 +39,20 @@ class Game
 	end
 end
 
+
 game = Game.new
 player = Player.new
 player.hello
 game.start
+
+# Save and Load Game Methods
+
+def save_game
+	save_me = YAML::dump(game)
+	puts save_me
+end
+
+def load_game
+	load_me = YAML::load(save_me)
+end
+

@@ -53,7 +53,7 @@ class Hangman
 			word_arr.each do |i|
 				@hidden[i] = @letter
 			end
-			if @word == @hidden
+			if @word.to_s == @hidden.join("").to_s
 				puts "You win!!"
 				puts "Secret word was #{@word}."
 				puts "Bye..."
