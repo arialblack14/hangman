@@ -9,6 +9,8 @@ class Game
 		@ans = 0
 		@game = game
 		@hangman = hangman
+		# @secret = hangman.hidden_word
+		# @word_given = hangman.hidden
 	end
 
 	def start
@@ -25,17 +27,43 @@ class Game
 
 	def choice
 		if @ans == 1
-			@hangman = Hangman.new
-			@hangman.random_word
+			new_game
+
 		elsif @ans == 2
-			# some code to load game
+			puts "Saving..."
+			save_game
+	
 		elsif @ans == 3
 			puts "Sorry to see you go..."
 			exit
+
 		else
 			puts "1, 2 or 3 please."
 			choice
 		end
+	end
+
+	def new_game
+		@hangman = Hangman.new
+		@hangman.random_word
+	end
+
+	# Save and Load Game Methods
+
+	def save_game
+		save_now = YAML::dump(self)
+		# Opening with open so no need to close and can pass a block
+		save = File.open("saves.yml", "w") { |file| file.write(save_now) }
+		
+		3.times do
+			sleep 1
+			puts " . "
+		end
+	end
+
+	def load_game game
+		load_now = File.open("saves.yml", "r")
+		load = YAML::load(load_now.read)
 	end
 end
 
@@ -44,15 +72,4 @@ game = Game.new
 player = Player.new
 player.hello
 game.start
-
-# Save and Load Game Methods
-
-def save_game
-	save_me = YAML::dump(game)
-	puts save_me
-end
-
-def load_game
-	load_me = YAML::load(save_me)
-end
 

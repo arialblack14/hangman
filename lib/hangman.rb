@@ -1,5 +1,5 @@
 class Hangman
-	attr_reader :file, :word, :letter, :hidden, :turn, :not_found
+	attr_reader :game, :file, :word, :letter, :hidden, :turn, :not_found
 
 	def initialize
 		@file = File.open("5desk.txt", "r")
@@ -8,6 +8,7 @@ class Hangman
 		@hidden = []
 		@turn = 10
 		@not_found = []
+		@game = Game.new
 	end
 	
 	def random_word
@@ -35,17 +36,22 @@ class Hangman
 
 	def find_word
 		puts "Give me a letter: "
-		@letter = gets.downcase.chomp[0]
+		puts "You can save your progress by typing: '2'"
+		@letter = gets.downcase.chomp[0] 
 		guess @letter
 	end
 
 	def guess letter
 		# Checks if letter given is valid
-		if !('a'..'z').to_a.include? @letter
-			puts "A valid letter please."
-			find_word
+		unless @letter == "2"
+			if !('a'..'z').to_a.include? @letter
+				puts "A valid letter please."
+				find_word
+			end
+		else
+			@game.save_game
 		end
-
+		
 		if @word.include? @letter
 			puts "Found '#{@letter}'"
 			# Substitute all occurences of given letter in @hidden array
