@@ -1,13 +1,14 @@
 class Hangman
-	attr_reader :game, :file, :word, :letter, :hidden, :turn, :not_found
+	attr_accessor :turn
+	attr_reader :game, :file, :word, :letter, :hidden, :not_found
 
 	def initialize
 		@file = File.open("5desk.txt", "r")
-		@word = @file.to_a.sample.downcase.chomp
+		@word ||= @file.to_a.sample.downcase.chomp
 		@letter = letter
-		@hidden = []
+		@hidden ||= []
 		@turn = 10
-		@not_found = []
+		@not_found ||= []
 		@game = Game.new
 	end
 	
@@ -50,6 +51,8 @@ class Hangman
 			end
 		else
 			@game.save_game
+			puts "Saved! Bye..."
+			exit
 		end
 		
 		if @word.include? @letter

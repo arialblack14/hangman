@@ -1,4 +1,7 @@
 --- !ruby/object:Game
 ans: 0
+turns_taken: 
+secret: 
+letters_given: 
+letter_now: 
 game: 
-hangman: 

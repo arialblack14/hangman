@@ -3,19 +3,22 @@ require_relative 'hangman'
 require_relative 'player'
 
 class Game
-	attr_reader :ans, :game, :hangman
+	attr_reader :ans, :turns_taken, :secret, :letters_given, 
+							:game, :letter_now
 
 	def initialize
 		@ans = 0
+		@turns_taken = @turn
+		@secret = @word
+		@letters_given = @hidden
+		@letter_now = @letter
 		@game = game
-		@hangman = hangman
-		# @secret = hangman.hidden_word
-		# @word_given = hangman.hidden
 	end
 
 	def start
+		puts "*******************"
 		puts "***H A N G M A N***"
-		puts "Loading..."
+		puts "*******************"
 		sleep 1
 		puts "Please choose from 1 to 3."
 		puts "1 : New game"
@@ -30,8 +33,8 @@ class Game
 			new_game
 
 		elsif @ans == 2
-			puts "Saving..."
-			save_game
+			puts "Loading..."
+			load_game
 	
 		elsif @ans == 3
 			puts "Sorry to see you go..."
@@ -53,7 +56,7 @@ class Game
 	def save_game
 		save_now = YAML::dump(self)
 		# Opening with open so no need to close and can pass a block
-		save = File.open("saves.yml", "w") { |file| file.write(save_now) }
+		file_save = File.open("saves.yml", "w") { |file| file.write(save_now) }
 		
 		3.times do
 			sleep 1
@@ -61,9 +64,11 @@ class Game
 		end
 	end
 
-	def load_game game
-		load_now = File.open("saves.yml", "r")
-		load = YAML::load(load_now.read)
+	def load_game
+		load_now = File.open("saves.yml", "r") # 'r' is optional
+		YAML::load(load_now.read)
+		Hangman.new.random_word
+		load_now.close
 	end
 end
 
