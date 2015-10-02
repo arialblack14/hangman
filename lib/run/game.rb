@@ -1,18 +1,14 @@
-require 'yaml'
-require_relative 'hangman'
-require_relative 'player'
-
 class Game
-	attr_reader :ans, :turns_taken, :secret, :letters_given, 
-							:game, :letter_now
+	attr_reader :ans, :turn, :word, :hidden,
+							:game, :letter
 
 	def initialize
 		@ans = 0
-		@turns_taken = @turn
-		@secret = @word
-		@letters_given = @hidden
-		@letter_now = @letter
 		@game = game
+		@turn = @turn
+		@word = @word
+		@hidden = @hidden
+		@letter = @letter
 	end
 
 	def start
@@ -59,8 +55,8 @@ class Game
 		file_save = File.open("saves.yml", "w") { |file| file.write(save_now) }
 		
 		3.times do
-			sleep 1
-			puts " . "
+			sleep 1			
+			puts ". "
 		end
 	end
 
@@ -71,10 +67,3 @@ class Game
 		load_now.close
 	end
 end
-
-
-game = Game.new
-player = Player.new
-player.hello
-game.start
-

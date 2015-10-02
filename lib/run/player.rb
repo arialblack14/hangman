@@ -6,6 +6,6 @@ class Player
 	end
 
 	def hello
-		puts "Hello #{@name}."
+		puts "Hello, #{@name}."
 	end
 end

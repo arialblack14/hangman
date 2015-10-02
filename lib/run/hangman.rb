@@ -33,6 +33,7 @@ class Hangman
 			@hidden << "_ "
 		end
 		p @hidden.join(" ")
+		@hidden
 	end
 
 	def find_word
