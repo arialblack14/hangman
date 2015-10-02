@@ -1,7 +1,19 @@
---- !ruby/object:Game
-ans: 0
-game: 
-turn: 
-word: 
-hidden: 
-letter: 
+--- !ruby/object:Hangman
+file: !ruby/object:File {}
+word: remunerative
+letter: '2'
+hidden:
+- r
+- e
+- '_ '
+- '_ '
+- n
+- e
+- r
+- a
+- t
+- i
+- '_ '
+- e
+turn: 8
+not_found: q

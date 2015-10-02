@@ -1,6 +1,6 @@
 class Hangman
-	attr_accessor :turn
-	attr_reader :game, :file, :word, :letter, :hidden, :not_found
+	attr_accessor :turn, :word, :letter, :hidden
+	attr_reader :game, :file, :not_found
 
 	def initialize
 		@file = File.open("5desk.txt", "r")
@@ -8,8 +8,7 @@ class Hangman
 		@letter = letter
 		@hidden ||= []
 		@turn = 10
-		@not_found ||= []
-		@game = Game.new
+		@not_found ||= ""
 	end
 	
 	def random_word
@@ -51,7 +50,7 @@ class Hangman
 				find_word
 			end
 		else
-			@game.save_game
+			save_game
 			puts "Saved! Bye..."
 			exit
 		end
@@ -71,7 +70,7 @@ class Hangman
 			end
 		else 
 			puts "'#{@letter}' not found."
-			@not_found << @letter
+			@not_found << @letter if @letter.class.to_s == "String"
 			@turn -= 1
 		end
 		p @hidden.join(" ")
@@ -82,7 +81,7 @@ class Hangman
 
 	# Makes the array of not found letters
 	def letters_not_found
-		puts "Letters not found: "+ @not_found.join(" ")
+		puts "Letters not found: "+ @not_found
 	end
 
 	def no_turns_left
@@ -91,5 +90,28 @@ class Hangman
 			puts "Secret word was '#{@word}'."
 			exit
 		end
+	end
+
+	# Save and Load Game Methods
+
+	def save_game
+		save_now = YAML::dump(self)
+		# Opening with open so no need to close and can pass a block
+		file_save = File.open("saves.yml", "w") { |file| file.write(save_now) }
+		
+		3.times do
+			sleep 1			
+			puts ". "
+		end
+	end
+
+	def start_from_load
+		game_info = YAML::load(File.open("saves.yml", "r"))
+		self.hidden = game_info.hidden
+		self.word = game_info.word
+		self.turn = game_info.turn
+		
+		p @hidden.join(" ")
+		find_word
 	end
 end

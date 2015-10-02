@@ -1,14 +1,9 @@
 class Game
-	attr_reader :ans, :turn, :word, :hidden,
-							:game, :letter
+	attr_reader :ans, :game
 
 	def initialize
 		@ans = 0
 		@game = game
-		@turn = @turn
-		@word = @word
-		@hidden = @hidden
-		@letter = @letter
 	end
 
 	def start
@@ -38,32 +33,19 @@ class Game
 
 		else
 			puts "1, 2 or 3 please."
-			choice
 		end
 	end
+
 
 	def new_game
 		@hangman = Hangman.new
 		@hangman.random_word
 	end
 
-	# Save and Load Game Methods
-
-	def save_game
-		save_now = YAML::dump(self)
-		# Opening with open so no need to close and can pass a block
-		file_save = File.open("saves.yml", "w") { |file| file.write(save_now) }
-		
-		3.times do
-			sleep 1			
-			puts ". "
-		end
-	end
-
 	def load_game
 		load_now = File.open("saves.yml", "r") # 'r' is optional
 		YAML::load(load_now.read)
-		Hangman.new.random_word
+		Hangman.new.start_from_load
 		load_now.close
 	end
 end
